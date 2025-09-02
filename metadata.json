@@ -1,0 +1,5 @@
+{
+  "name": "Adera Admin Dashboard",
+  "description": "A web-based admin dashboard for the Adera Hybrid App ecosystem, providing oversight for both Adera-PTP (Logistics) and Adera-Shop (E-Commerce). It allows administrators to monitor key metrics, track parcels, and manage partner shops.",
+  "requestFramePermissions": []
+}
