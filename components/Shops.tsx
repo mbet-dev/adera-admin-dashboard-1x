@@ -7,13 +7,13 @@ import { TableSkeleton } from './skeletons';
 const getStatusClass = (status: ShopStatus) => {
     switch (status) {
         case ShopStatus.Active:
-            return 'bg-green-900 text-green-300';
+            return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
         case ShopStatus.Inactive:
-            return 'bg-red-900 text-red-300';
+            return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
         case ShopStatus.Pending:
-            return 'bg-yellow-900 text-yellow-300';
+            return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
         default:
-            return 'bg-gray-700 text-gray-300';
+            return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
     }
 };
 
@@ -83,8 +83,8 @@ const Shops: React.FC<ShopsProps> = ({ onViewShop }) => {
     const SortableHeader: React.FC<{ children: React.ReactNode; sortKey: SortKey; }> = ({ children, sortKey }) => {
         const isActive = sortConfig.key === sortKey;
         return (
-            <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                <button onClick={() => handleSort(sortKey)} className={`flex items-center gap-2 group transition-colors ${isActive ? 'text-white' : 'hover:text-white'}`}>
+            <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <button onClick={() => handleSort(sortKey)} className={`flex items-center gap-2 group transition-colors ${isActive ? 'text-gray-900 dark:text-white' : 'hover:text-gray-900 dark:hover:text-white'}`}>
                     {children}
                     <span className={`transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-60'}`}>
                         {sortConfig.direction === 'asc' ? <ArrowUpIcon className="h-3 w-3" /> : <ArrowDownIcon className="h-3 w-3" />}
@@ -96,7 +96,7 @@ const Shops: React.FC<ShopsProps> = ({ onViewShop }) => {
 
     return (
         <div className="space-y-6">
-            <h1 className="text-4xl font-bold text-white tracking-tight">Shop Management</h1>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">Shop Management</h1>
 
             <div className="flex flex-col md:flex-row gap-4 items-center">
                 <div className="relative w-full md:w-1/3">
@@ -106,13 +106,13 @@ const Shops: React.FC<ShopsProps> = ({ onViewShop }) => {
                         placeholder="Search by Shop Name or Owner..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 pl-11 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg py-3 pl-11 pr-4 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
                     />
                 </div>
                 <select 
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value as ShopStatus | 'all')}
-                    className="w-full md:w-auto bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    className="w-full md:w-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg py-3 px-4 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
                 >
                     <option value="all">All Statuses</option>
                     {Object.values(ShopStatus).map(status => (
@@ -122,10 +122,10 @@ const Shops: React.FC<ShopsProps> = ({ onViewShop }) => {
             </div>
 
             {isLoading ? <TableSkeleton columns={6} /> : (
-                <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-700">
-                            <thead className="bg-gray-700/50">
+                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead className="bg-gray-50 dark:bg-gray-700/50">
                                 <tr>
                                     <SortableHeader sortKey="name">Shop Name</SortableHeader>
                                     <SortableHeader sortKey="owner">Owner</SortableHeader>
@@ -135,20 +135,20 @@ const Shops: React.FC<ShopsProps> = ({ onViewShop }) => {
                                     <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-700">
+                            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                                 {filteredShops.map((shop) => (
-                                    <tr key={shop.id} className="hover:bg-gray-700/50 transition-colors">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{shop.name}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{shop.owner}</td>
+                                    <tr key={shop.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{shop.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{shop.owner}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(shop.status)}`}>
                                                 {shop.status}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-300">{shop.totalOrders}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">ETB {shop.totalRevenue.toLocaleString()}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-600 dark:text-gray-300">{shop.totalOrders}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">ETB {shop.totalRevenue.toLocaleString()}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button onClick={() => onViewShop(shop.id)} className="text-teal-400 hover:text-teal-300">View</button>
+                                            <button onClick={() => onViewShop(shop.id)} className="text-teal-600 dark:text-teal-400 hover:text-teal-500 dark:hover:text-teal-300">View</button>
                                         </td>
                                     </tr>
                                 ))}

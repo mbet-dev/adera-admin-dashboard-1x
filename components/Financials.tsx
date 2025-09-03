@@ -6,12 +6,12 @@ import KpiCard from './KpiCard';
 
 const ExportButtons: React.FC = () => (
     <div className="flex items-center gap-2">
-        <button onClick={() => alert('Exporting to Google Sheets...')} className="flex items-center gap-2 text-sm bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
-            <GoogleSheetsIcon className="h-5 w-5 text-green-400" />
+        <button onClick={() => alert('Exporting to Google Sheets...')} className="flex items-center gap-2 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+            <GoogleSheetsIcon className="h-5 w-5 text-green-500" />
             <span className="hidden sm:inline">Export to Sheets</span>
         </button>
-        <button onClick={() => alert('Downloading PDF...')} className="flex items-center gap-2 text-sm bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
-            <PdfIcon className="h-5 w-5 text-red-400" />
+        <button onClick={() => alert('Downloading PDF...')} className="flex items-center gap-2 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+            <PdfIcon className="h-5 w-5 text-red-500" />
             <span className="hidden sm:inline">Download PDF</span>
         </button>
     </div>
@@ -71,22 +71,22 @@ const RevenueChart: React.FC<{
     }, [chartData, maxValue]);
 
     return (
-        <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700 h-full flex flex-col">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
             <div className="flex flex-wrap gap-4 justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold text-white">Revenue Overview</h3>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Revenue Overview</h3>
                 <div className="flex items-center gap-2">
-                    <div className="flex gap-1 bg-gray-700 p-1 rounded-lg">
+                    <div className="flex gap-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
                         {['1M', '6M', '12M'].map(range => (
-                            <button key={range} onClick={() => setTimeRange(range)} className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${timeRange === range ? 'bg-teal-500 text-white' : 'text-gray-400 hover:bg-gray-600'}`}>
+                            <button key={range} onClick={() => setTimeRange(range)} className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${timeRange === range ? 'bg-teal-500 text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'}`}>
                                 {range}
                             </button>
                         ))}
                     </div>
-                     <div className="flex gap-1 bg-gray-700 p-1 rounded-lg">
-                        <button onClick={() => setChartView('bar')} className={`p-1.5 rounded-md transition-colors ${chartView === 'bar' ? 'bg-teal-500 text-white' : 'text-gray-400 hover:bg-gray-600'}`}>
+                     <div className="flex gap-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+                        <button onClick={() => setChartView('bar')} className={`p-1.5 rounded-md transition-colors ${chartView === 'bar' ? 'bg-teal-500 text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'}`}>
                             <FinancialsIcon className="h-4 w-4" />
                         </button>
-                         <button onClick={() => setChartView('line')} className={`p-1.5 rounded-md transition-colors ${chartView === 'line' ? 'bg-teal-500 text-white' : 'text-gray-400 hover:bg-gray-600'}`}>
+                         <button onClick={() => setChartView('line')} className={`p-1.5 rounded-md transition-colors ${chartView === 'line' ? 'bg-teal-500 text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'}`}>
                             <LineChartIcon className="h-4 w-4" />
                         </button>
                     </div>
@@ -97,26 +97,26 @@ const RevenueChart: React.FC<{
                 <div className="flex items-end h-full gap-2 sm:gap-4">
                     {chartData.map(d => (
                         <div key={d.label} className={`flex-1 flex flex-col items-center gap-2 group cursor-pointer transition-opacity duration-300 ${selectedMonth && selectedMonth !== d.label ? 'opacity-30' : 'opacity-100'}`} onClick={() => onMonthSelect(selectedMonth === d.label ? null : d.label)}>
-                            <div className={`relative w-full h-full flex items-end transition-all duration-300 ${selectedMonth === d.label ? 'ring-2 ring-teal-400 rounded-t-lg' : ''}`}>
-                                <div className="absolute bottom-0 w-full bg-gray-700 rounded-t-lg" style={{ height: `${(d.Total / maxValue) * 100}%` }}>
-                                    <div className="absolute bottom-0 w-full bg-cyan-500 rounded-t-lg" style={{ height: `${d.Total > 0 ? (d['Adera-Shop'] / d.Total) * 100 : 0}%` }}/>
+                            <div className={`relative w-full h-full flex items-end transition-all duration-300 ${selectedMonth === d.label ? 'ring-2 ring-teal-500 dark:ring-teal-400 rounded-t-lg' : ''}`}>
+                                <div className="absolute bottom-0 w-full bg-gray-200 dark:bg-gray-700 rounded-t-lg" style={{ height: `${(d.Total / maxValue) * 100}%` }}>
+                                    <div className="absolute bottom-0 w-full bg-cyan-400 dark:bg-cyan-500 rounded-t-lg" style={{ height: `${d.Total > 0 ? (d['Adera-Shop'] / d.Total) * 100 : 0}%` }}/>
                                     <div className="absolute bottom-0 w-full bg-teal-500 rounded-t-lg" style={{ height: `${d.Total > 0 ? (d['Adera-PTP'] / d.Total) * 100 : 0}%` }}/>
                                 </div>
-                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 p-2 rounded-md shadow-lg text-xs z-10 w-max pointer-events-none">
+                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 dark:bg-gray-900 p-2 rounded-md shadow-lg text-xs z-10 w-max pointer-events-none">
                                     <div className="font-bold text-white">{d.label}</div>
                                     <div><span className="font-bold text-gray-300">Total:</span> ETB {d.Total.toFixed(2)}</div>
                                     <div className="text-teal-400">PTP: ETB {d['Adera-PTP'].toFixed(2)}</div>
                                     <div className="text-cyan-400">Shop: ETB {d['Adera-Shop'].toFixed(2)}</div>
                                 </div>
                             </div>
-                            <span className="text-xs font-medium text-gray-400">{d.label}</span>
+                            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{d.label}</span>
                         </div>
                     ))}
                 </div>
               ) : (
                  <div className="w-full h-full relative">
                     <div className="absolute bottom-0 left-0 right-0 flex justify-between px-2">
-                        {chartData.map(d => (<span key={d.label} className="text-xs text-gray-400">{d.label}</span>))}
+                        {chartData.map(d => (<span key={d.label} className="text-xs text-gray-500 dark:text-gray-400">{d.label}</span>))}
                     </div>
                      <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" className="overflow-visible">
                         <path d={lineChartPaths.shop} fill="none" stroke="#22d3ee" strokeWidth="1" />
@@ -127,9 +127,9 @@ const RevenueChart: React.FC<{
                             const x = (i / (chartData.length - 1)) * 100;
                             return (
                                 <div key={d.label} className={`relative h-full group cursor-pointer transition-opacity duration-300 ${selectedMonth && selectedMonth !== d.label ? 'opacity-30' : 'opacity-100'}`} style={{ left: `${x}%`, transform: 'translateX(-50%)', width: `${100/chartData.length}%` }} onClick={() => onMonthSelect(selectedMonth === d.label ? null : d.label)}>
-                                     <div className={`absolute w-3 h-3 bg-gray-900 border-2 rounded-full -translate-x-1/2 -translate-y-1/2 ${selectedMonth === d.label ? 'border-teal-300 scale-125' : 'border-cyan-500'}`} style={{ top: `${100 - (d['Adera-Shop'] / maxValue) * 100}%`, left: '50%' }} />
-                                     <div className={`absolute w-3 h-3 bg-gray-900 border-2 rounded-full -translate-x-1/2 -translate-y-1/2 ${selectedMonth === d.label ? 'border-teal-300 scale-125' : 'border-teal-500'}`} style={{ top: `${100 - (d['Adera-PTP'] / maxValue) * 100}%`, left: '50%' }} />
-                                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 p-2 rounded-md shadow-lg text-xs z-10 w-max pointer-events-none">
+                                     <div className={`absolute w-3 h-3 bg-gray-100 dark:bg-gray-900 border-2 rounded-full -translate-x-1/2 -translate-y-1/2 ${selectedMonth === d.label ? 'border-teal-400 dark:border-teal-300 scale-125' : 'border-cyan-500'}`} style={{ top: `${100 - (d['Adera-Shop'] / maxValue) * 100}%`, left: '50%' }} />
+                                     <div className={`absolute w-3 h-3 bg-gray-100 dark:bg-gray-900 border-2 rounded-full -translate-x-1/2 -translate-y-1/2 ${selectedMonth === d.label ? 'border-teal-400 dark:border-teal-300 scale-125' : 'border-teal-500'}`} style={{ top: `${100 - (d['Adera-PTP'] / maxValue) * 100}%`, left: '50%' }} />
+                                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 dark:bg-gray-900 p-2 rounded-md shadow-lg text-xs z-10 w-max pointer-events-none">
                                         <div className="font-bold text-white">{d.label}</div>
                                         <div><span className="font-bold text-gray-300">Total:</span> ETB {d.Total.toFixed(2)}</div>
                                         <div className="text-teal-400">PTP: ETB {d['Adera-PTP'].toFixed(2)}</div>
@@ -163,28 +163,28 @@ const IncomeBreakdown: React.FC<{ transactions: Transaction[] }> = ({ transactio
     const circumference = 2 * Math.PI * 54;
 
     return (
-        <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700 h-full">
-            <h3 className="text-xl font-semibold text-white mb-4">Income Breakdown</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 h-full">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Income Breakdown</h3>
             <div className="flex flex-col items-center justify-center gap-6">
                 <div className="relative">
                     <svg className="transform -rotate-90" width="160" height="160" viewBox="0 0 120 120">
-                       <circle cx="60" cy="60" r="54" fill="none" stroke="#374151" strokeWidth="12" />
+                       <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" className="dark:stroke-gray-700" />
                        <circle cx="60" cy="60" r="54" fill="none" stroke="#2dd4bf" strokeWidth="12" strokeDasharray={`${circumference * (ptpPercent / 100)} ${circumference}`} />
                        <circle cx="60" cy="60" r="54" fill="none" stroke="#22d3ee" strokeWidth="12" strokeDasharray={`${circumference * (shopPercent / 100)} ${circumference}`}  strokeDashoffset={-circumference * (ptpPercent / 100)} />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-2xl font-bold text-white">{ptpPercent.toFixed(0)}%</span>
-                        <span className="text-xs text-gray-400">Adera-PTP</span>
+                        <span className="text-2xl font-bold text-gray-900 dark:text-white">{ptpPercent.toFixed(0)}%</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">Adera-PTP</span>
                     </div>
                 </div>
                 <div className="w-full space-y-2 text-sm">
                     <div className="flex justify-between items-center">
-                        <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-teal-500"></span>Adera-PTP</span>
-                        <span className="font-semibold text-white">ETB {breakdown['Adera-PTP'].toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        <span className="flex items-center gap-2 text-gray-700 dark:text-gray-300"><span className="h-3 w-3 rounded-full bg-teal-500"></span>Adera-PTP</span>
+                        <span className="font-semibold text-gray-900 dark:text-white">ETB {breakdown['Adera-PTP'].toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                        <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-cyan-500"></span>Adera-Shop</span>
-                        <span className="font-semibold text-white">ETB {breakdown['Adera-Shop'].toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        <span className="flex items-center gap-2 text-gray-700 dark:text-gray-300"><span className="h-3 w-3 rounded-full bg-cyan-500"></span>Adera-Shop</span>
+                        <span className="font-semibold text-gray-900 dark:text-white">ETB {breakdown['Adera-Shop'].toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                     </div>
                 </div>
             </div>
@@ -234,24 +234,24 @@ const ProfitAndLossStatement: React.FC<{ transactions: Transaction[] }> = ({ tra
     }, [transactions]);
 
     return (
-        <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
-            <h3 className="text-xl font-semibold text-white mb-4">Profit & Loss Overview</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Profit & Loss Overview</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-center">
                 <div>
-                    <p className="text-sm text-gray-400">Total Revenue</p>
-                    <p className="text-2xl font-bold text-green-400">ETB {totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Total Revenue</p>
+                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">ETB {totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
                 </div>
                 <div>
-                    <p className="text-sm text-gray-400">Total Expenses</p>
-                    <p className="text-2xl font-bold text-red-400">ETB {totalExpenses.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Total Expenses</p>
+                    <p className="text-2xl font-bold text-red-600 dark:text-red-400">ETB {totalExpenses.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
                 </div>
                 <div>
-                    <p className="text-sm text-gray-400">Net Profit</p>
-                    <p className={`text-2xl font-bold ${netProfit >= 0 ? 'text-white' : 'text-red-400'}`}>ETB {netProfit.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Net Profit</p>
+                    <p className={`text-2xl font-bold ${netProfit >= 0 ? 'text-gray-900 dark:text-white' : 'text-red-600 dark:text-red-400'}`}>ETB {netProfit.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
                 </div>
             </div>
             <div className="h-64 w-full">
-                <div className="flex items-end h-full gap-2 sm:gap-4 border-t border-gray-600 pt-4">
+                <div className="flex items-end h-full gap-2 sm:gap-4 border-t border-gray-200 dark:border-gray-600 pt-4">
                     {pnlData.chartData.map(d => {
                         const isPositive = d.netProfit >= 0;
                         const barHeight = (Math.abs(d.netProfit) / pnlData.maxAbsValue) * 100;
@@ -259,12 +259,12 @@ const ProfitAndLossStatement: React.FC<{ transactions: Transaction[] }> = ({ tra
                             <div key={d.label} className="flex-1 flex flex-col items-center gap-2 group">
                                 <div className="relative w-full h-full flex items-end justify-center">
                                     <div className={`${isPositive ? 'bg-green-500' : 'bg-red-500'} w-full rounded-t-md group-hover:opacity-80 transition-opacity`} style={{ height: `${barHeight}%` }} />
-                                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 p-2 rounded-md shadow-lg text-xs z-10 w-max pointer-events-none">
+                                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 dark:bg-gray-900 p-2 rounded-md shadow-lg text-xs z-10 w-max pointer-events-none">
                                         <div className="font-bold text-white">{d.label}</div>
                                         <div className={`${isPositive ? 'text-green-400' : 'text-red-400'}`}>Net: ETB {d.netProfit.toFixed(2)}</div>
                                     </div>
                                 </div>
-                                <span className="text-xs font-medium text-gray-400">{d.label}</span>
+                                <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{d.label}</span>
                             </div>
                         )
                     })}
@@ -277,42 +277,42 @@ const ProfitAndLossStatement: React.FC<{ transactions: Transaction[] }> = ({ tra
 const RecentTransactions: React.FC<{ transactions: Transaction[] }> = ({ transactions }) => {
     const getCategoryClass = (category: TransactionCategory) => {
         switch(category) {
-            case 'Adera-PTP': return 'bg-teal-900 text-teal-300';
-            case 'Adera-Shop': return 'bg-cyan-900 text-cyan-300';
-            case 'Platform Fee': return 'bg-blue-900 text-blue-300';
-            case 'Expense': return 'bg-red-900 text-red-300';
-            default: return 'bg-gray-700 text-gray-300';
+            case 'Adera-PTP': return 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300';
+            case 'Adera-Shop': return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300';
+            case 'Platform Fee': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+            case 'Expense': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+            default: return 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
         }
     };
     
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-700">
-                <thead className="bg-gray-700/50">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700/50">
                     <tr>
-                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Description</th>
-                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Date</th>
-                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Category</th>
-                        <th scope="col" className="px-6 py-4 text-right text-xs font-semibold text-gray-300 uppercase tracking-wider">Amount</th>
+                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
+                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+                        <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
+                        <th scope="col" className="px-6 py-4 text-right text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-700">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                     {transactions.length > 0 ? transactions.slice(0, 15).map(t => (
-                        <tr key={t.id} className="hover:bg-gray-700/50">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">{t.description}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{new Date(t.date).toLocaleDateString()}</td>
+                        <tr key={t.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{t.description}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{new Date(t.date).toLocaleDateString()}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm">
                                 <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getCategoryClass(t.category)}`}>
                                     {t.category}
                                 </span>
                             </td>
-                            <td className={`px-6 py-4 whitespace-nowrap text-sm text-right font-mono ${t.amount >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            <td className={`px-6 py-4 whitespace-nowrap text-sm text-right font-mono ${t.amount >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                                 {t.amount >= 0 ? '+' : ''}{t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}
                             </td>
                         </tr>
                     )) : (
                         <tr>
-                            <td colSpan={4} className="text-center py-8 text-gray-400">No transactions match the current filters.</td>
+                            <td colSpan={4} className="text-center py-8 text-gray-500 dark:text-gray-400">No transactions match the current filters.</td>
                         </tr>
                     )}
                 </tbody>
@@ -402,7 +402,7 @@ const Financials: React.FC = () => {
     return (
         <div className="space-y-8">
             <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-start">
-                <h1 className="text-4xl font-bold text-white tracking-tight">Financial Statistics</h1>
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">Financial Statistics</h1>
                 <ExportButtons />
             </div>
 
@@ -429,29 +429,29 @@ const Financials: React.FC = () => {
             <ProfitAndLossStatement transactions={filteredTransactions} />
 
             <div className="space-y-6">
-                <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                     <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
-                        <h3 className="text-xl font-semibold text-white">Filter Transactions</h3>
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Filter Transactions</h3>
                         <div className="flex flex-wrap items-center gap-4">
                             <div className="flex items-center gap-2">
-                                <label htmlFor="startDate" className="text-sm text-gray-400 shrink-0">Start Date</label>
+                                <label htmlFor="startDate" className="text-sm text-gray-500 dark:text-gray-400 shrink-0">Start Date</label>
                                 <input type="date" id="startDate" value={startDate} onChange={(e) => handleDateChange(e.target.value, endDate)} 
-                                    className="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"/>
+                                    className="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"/>
                             </div>
                             <div className="flex items-center gap-2">
-                                <label htmlFor="endDate" className="text-sm text-gray-400 shrink-0">End Date</label>
+                                <label htmlFor="endDate" className="text-sm text-gray-500 dark:text-gray-400 shrink-0">End Date</label>
                                 <input type="date" id="endDate" value={endDate} onChange={(e) => handleDateChange(startDate, e.target.value)}
-                                    className="bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"/>
+                                    className="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"/>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden">
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div className="p-6 flex justify-between items-center">
-                        <h3 className="text-xl font-semibold text-white">{title}</h3>
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h3>
                         {isFilterActive && (
-                            <button onClick={clearFilters} className="text-sm text-teal-400 hover:text-teal-300 font-semibold">Clear Filter</button>
+                            <button onClick={clearFilters} className="text-sm text-teal-600 dark:text-teal-400 hover:text-teal-500 dark:hover:text-teal-300 font-semibold">Clear Filter</button>
                         )}
                     </div>
                     <RecentTransactions transactions={filteredTransactions} />

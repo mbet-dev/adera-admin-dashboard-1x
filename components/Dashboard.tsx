@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import KpiCard from './KpiCard';
 import { mockParcels, mockShops } from '../data/mockData';
@@ -8,14 +7,14 @@ import { ParcelStatusBadge } from './ParcelStatusBadge';
 import { KpiCardSkeleton, ListSkeleton } from './skeletons';
 
 const RecentParcels: React.FC<{ parcels: Parcel[] }> = ({ parcels }) => (
-    <div className="bg-gray-800 rounded-xl shadow-lg p-6">
-        <h3 className="text-xl font-semibold text-white mb-4">Recent Parcels</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Parcels</h3>
         <div className="space-y-4">
             {parcels.slice(0, 5).map((parcel) => (
-                <div key={parcel.id} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                <div key={parcel.id} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
                     <div>
-                        <p className="font-semibold text-white">{parcel.trackingId}</p>
-                        <p className="text-sm text-gray-400">To: {parcel.recipient.name}</p>
+                        <p className="font-semibold text-gray-800 dark:text-white">{parcel.trackingId}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">To: {parcel.recipient.name}</p>
                     </div>
                     <ParcelStatusBadge status={parcel.status} />
                 </div>
@@ -25,16 +24,16 @@ const RecentParcels: React.FC<{ parcels: Parcel[] }> = ({ parcels }) => (
 );
 
 const NewShops: React.FC<{ shops: Shop[] }> = ({ shops }) => (
-    <div className="bg-gray-800 rounded-xl shadow-lg p-6">
-        <h3 className="text-xl font-semibold text-white mb-4">New Partner Shops</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">New Partner Shops</h3>
         <div className="space-y-4">
             {shops.filter(s => new Date(s.joinedDate) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).slice(0, 5).map((shop) => (
-                <div key={shop.id} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                <div key={shop.id} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
                     <div>
-                        <p className="font-semibold text-white">{shop.name}</p>
-                        <p className="text-sm text-gray-400">Owner: {shop.owner}</p>
+                        <p className="font-semibold text-gray-800 dark:text-white">{shop.name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Owner: {shop.owner}</p>
                     </div>
-                    <span className="text-xs font-medium text-teal-300 bg-teal-900 px-2 py-1 rounded-full">{new Date(shop.joinedDate).toLocaleDateString()}</span>
+                    <span className="text-xs font-medium text-teal-600 dark:text-teal-300 bg-teal-100 dark:bg-teal-900 px-2 py-1 rounded-full">{new Date(shop.joinedDate).toLocaleDateString()}</span>
                 </div>
             ))}
         </div>
@@ -59,7 +58,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-4xl font-bold text-white tracking-tight">Dashboard Overview</h1>
+      <h1 className="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">Dashboard Overview</h1>
       
       {isLoading ? (
         <>

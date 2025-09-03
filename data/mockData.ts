@@ -1,5 +1,4 @@
-
-import { type Parcel, ParcelStatus, type Shop, ShopStatus, type Transaction } from '../types';
+import { type Parcel, ParcelStatus, type Shop, ShopStatus, type Transaction, EmployeeRole, EmployeeStatus, type Employee, type Shift } from '../types';
 
 export const mockParcels: Parcel[] = [
   {
@@ -72,12 +71,12 @@ export const mockShops: Shop[] = [
       { status: ShopStatus.Pending, date: '2023-01-10T09:00:00Z' },
     ],
     performanceHistory: [
-      { month: 'May', orders: 20, revenue: 14000 },
-      { month: 'Jun', orders: 22, revenue: 15400 },
-      { month: 'Jul', orders: 25, revenue: 17500 },
-      { month: 'Aug', orders: 23, revenue: 16100 },
-      { month: 'Sep', orders: 28, revenue: 19600 },
-      { month: 'Oct', orders: 30, revenue: 21000 },
+      { date: '2023-05-15', orders: 20, revenue: 14000 },
+      { date: '2023-06-15', orders: 22, revenue: 15400 },
+      { date: '2023-07-15', orders: 25, revenue: 17500 },
+      { date: '2023-08-15', orders: 23, revenue: 16100 },
+      { date: '2023-09-15', orders: 28, revenue: 19600 },
+      { date: '2023-10-15', orders: 30, revenue: 21000 },
     ],
   },
   {
@@ -93,12 +92,12 @@ export const mockShops: Shop[] = [
       { status: ShopStatus.Pending, date: '2023-02-18T14:00:00Z' },
     ],
      performanceHistory: [
-      { month: 'May', orders: 12, revenue: 6000 },
-      { month: 'Jun', orders: 15, revenue: 7500 },
-      { month: 'Jul', orders: 18, revenue: 9000 },
-      { month: 'Aug', orders: 20, revenue: 10000 },
-      { month: 'Sep', orders: 17, revenue: 8500.50 },
-      { month: 'Oct', orders: 20, revenue: 10000 },
+      { date: '2023-05-15', orders: 12, revenue: 6000 },
+      { date: '2023-06-15', orders: 15, revenue: 7500 },
+      { date: '2023-07-15', orders: 18, revenue: 9000 },
+      { date: '2023-08-15', orders: 20, revenue: 10000 },
+      { date: '2023-09-15', orders: 17, revenue: 8500.50 },
+      { date: '2023-10-15', orders: 20, revenue: 10000 },
     ],
   },
   {
@@ -115,12 +114,12 @@ export const mockShops: Shop[] = [
       { status: ShopStatus.Pending, date: '2023-03-05T09:00:00Z' },
     ],
     performanceHistory: [
-      { month: 'May', orders: 10, revenue: 50000 },
-      { month: 'Jun', orders: 12, revenue: 60000 },
-      { month: 'Jul', orders: 15, revenue: 75000 },
-      { month: 'Aug', orders: 8, revenue: 40000 },
-      { month: 'Sep', orders: 5, revenue: 25000 },
-      { month: 'Oct', orders: 5, revenue: 25000 },
+      { date: '2023-05-15', orders: 10, revenue: 50000 },
+      { date: '2023-06-15', orders: 12, revenue: 60000 },
+      { date: '2023-07-15', orders: 15, revenue: 75000 },
+      { date: '2023-08-15', orders: 8, revenue: 40000 },
+      { date: '2023-09-15', orders: 5, revenue: 25000 },
+      { date: '2023-10-15', orders: 5, revenue: 25000 },
     ],
   },
   {
@@ -136,12 +135,12 @@ export const mockShops: Shop[] = [
       { status: ShopStatus.Pending, date: '2022-12-01T10:00:00Z' },
     ],
     performanceHistory: [
-      { month: 'May', orders: 35, revenue: 26250 },
-      { month: 'Jun', orders: 40, revenue: 30000 },
-      { month: 'Jul', orders: 45, revenue: 33750 },
-      { month: 'Aug', orders: 50, revenue: 37500.75 },
-      { month: 'Sep', orders: 48, revenue: 36000 },
-      { month: 'Oct', orders: 42, revenue: 31500 },
+      { date: '2023-05-15', orders: 35, revenue: 26250 },
+      { date: '2023-06-15', orders: 40, revenue: 30000 },
+      { date: '2023-07-15', orders: 45, revenue: 33750 },
+      { date: '2023-08-15', orders: 50, revenue: 37500.75 },
+      { date: '2023-09-15', orders: 48, revenue: 36000 },
+      { date: '2023-10-15', orders: 42, revenue: 31500 },
     ],
   },
     {
@@ -156,12 +155,12 @@ export const mockShops: Shop[] = [
         { status: ShopStatus.Pending, date: '2023-10-25T11:45:00Z' },
     ],
     performanceHistory: [
-      { month: 'May', orders: 0, revenue: 0 },
-      { month: 'Jun', orders: 0, revenue: 0 },
-      { month: 'Jul', orders: 0, revenue: 0 },
-      { month: 'Aug', orders: 0, revenue: 0 },
-      { month: 'Sep', orders: 0, revenue: 0 },
-      { month: 'Oct', orders: 5, revenue: 1500 },
+      { date: '2023-05-15', orders: 0, revenue: 0 },
+      { date: '2023-06-15', orders: 0, revenue: 0 },
+      { date: '2023-07-15', orders: 0, revenue: 0 },
+      { date: '2023-08-15', orders: 0, revenue: 0 },
+      { date: '2023-09-15', orders: 0, revenue: 0 },
+      { date: '2023-10-25', orders: 5, revenue: 1500 },
     ],
   },
 ];
@@ -198,5 +197,34 @@ export const mockTransactions: Transaction[] = Array.from({ length: 50 }, (_, i)
         category,
         description,
         amount: parseFloat(amount.toFixed(2)),
+    };
+});
+
+export const mockEmployees: Employee[] = [
+    { id: 'emp-1', name: 'Yonas Alemayehu', role: EmployeeRole.Driver, status: EmployeeStatus.Active, email: 'yonas.a@adera.com', phone: '0911234567', vehicleId: 'A84321', performance: { onTimeDeliveryRate: 98, avgRating: 4.8 }, avatarUrl: `https://i.pravatar.cc/150?u=emp-1` },
+    { id: 'emp-2', name: 'Fatuma Mohammed', role: EmployeeRole.HubWorker, status: EmployeeStatus.Active, email: 'fatuma.m@adera.com', phone: '0912345678', hubId: 'HUB-BOLE', performance: { parcelsProcessed: 45 }, avatarUrl: `https://i.pravatar.cc/150?u=emp-2` },
+    { id: 'emp-3', name: 'Samuel Girma', role: EmployeeRole.Driver, status: EmployeeStatus.Active, email: 'samuel.g@adera.com', phone: '0913456789', vehicleId: 'B12345', performance: { onTimeDeliveryRate: 95, avgRating: 4.6 }, avatarUrl: `https://i.pravatar.cc/150?u=emp-3` },
+    { id: 'emp-4', name: 'Helen Berhanu', role: EmployeeRole.Manager, status: EmployeeStatus.Active, email: 'helen.b@adera.com', phone: '0914567890', hubId: 'HUB-BOLE', performance: { avgRating: 4.9 }, avatarUrl: `https://i.pravatar.cc/150?u=emp-4` },
+    { id: 'emp-5', name: 'Dawit Tadesse', role: EmployeeRole.HubWorker, status: EmployeeStatus.OnLeave, email: 'dawit.t@adera.com', phone: '0915678901', hubId: 'HUB-CMC', performance: { parcelsProcessed: 52 }, avatarUrl: `https://i.pravatar.cc/150?u=emp-5` },
+    { id: 'emp-6', name: 'Sara Lemma', role: EmployeeRole.Driver, status: EmployeeStatus.Inactive, email: 'sara.l@adera.com', phone: '0916789012', vehicleId: 'C54321', performance: { onTimeDeliveryRate: 99, avgRating: 4.9 }, avatarUrl: `https://i.pravatar.cc/150?u=emp-6` },
+    { id: 'emp-7', name: 'Kebede Mekonnen', role: EmployeeRole.HubWorker, status: EmployeeStatus.Active, email: 'kebede.m@adera.com', phone: '0917890123', hubId: 'HUB-BOLE', performance: { parcelsProcessed: 48 }, avatarUrl: `https://i.pravatar.cc/150?u=emp-7` },
+    { id: 'emp-8', name: 'Liya Assefa', role: EmployeeRole.Driver, status: EmployeeStatus.Active, email: 'liya.a@adera.com', phone: '0918901234', vehicleId: 'D98765', performance: { onTimeDeliveryRate: 97, avgRating: 4.7 }, avatarUrl: `https://i.pravatar.cc/150?u=emp-8` },
+];
+
+
+export const mockShifts: Shift[] = Array.from({ length: 20 }).map((_, i) => {
+    const employee = mockEmployees[i % mockEmployees.length];
+    const date = new Date();
+    date.setDate(date.getDate() + (i % 7)); // Shifts for the next 7 days
+    
+    const isMorningShift = Math.random() > 0.5;
+
+    return {
+        id: `shift-${i}`,
+        employeeId: employee.id,
+        date: date.toISOString().split('T')[0],
+        startTime: isMorningShift ? "08:00" : "16:00",
+        endTime: isMorningShift ? "16:00" : "24:00",
+        hubId: employee.hubId || (Math.random() > 0.5 ? 'HUB-BOLE' : 'HUB-CMC'),
     };
 });
