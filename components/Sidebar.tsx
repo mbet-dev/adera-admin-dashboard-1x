@@ -46,7 +46,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, isOpen, setIsOpe
         </nav>
         <div className="px-4 py-6 border-t border-gray-700">
             <button
-              className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors duration-200 text-gray-400 hover:bg-gray-700 hover:text-white ${!isOpen && 'justify-center'}`}
+              onClick={() => setView({ name: 'settings' })}
+              className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors duration-200 ${
+                activeView.name === 'settings'
+                  ? 'bg-teal-500 text-white shadow-lg'
+                  : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+              } ${!isOpen && 'justify-center'}`}
             >
               <SettingsIcon className="h-6 w-6" />
               <span className={`ml-4 font-medium transition-opacity duration-200 ${!isOpen && 'opacity-0 hidden'}`}>Settings</span>
@@ -82,6 +87,25 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, isOpen, setIsOpe
                 </button>
               ))}
             </nav>
+            <div className="px-4 py-6 border-t border-gray-700">
+                <button
+                onClick={() => { setView({ name: 'settings' }); setIsOpen(false); }}
+                className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors duration-200 ${
+                    activeView.name === 'settings'
+                    ? 'bg-teal-500 text-white shadow-lg'
+                    : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+                }`}
+                >
+                <SettingsIcon className="h-6 w-6" />
+                <span className="ml-4 font-medium">Settings</span>
+                </button>
+                <button
+                className="flex items-center w-full px-4 py-3 mt-2 rounded-lg transition-colors duration-200 text-gray-400 hover:bg-gray-700 hover:text-white"
+                >
+                <LogoutIcon className="h-6 w-6" />
+                <span className="ml-4 font-medium">Logout</span>
+                </button>
+            </div>
         </div>
     </>
   );

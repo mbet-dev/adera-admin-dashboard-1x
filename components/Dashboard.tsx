@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import KpiCard from './KpiCard';
 import { mockParcels, mockShops } from '../data/mockData';
 import { type Parcel, type Shop, ParcelStatus } from '../types';
 import { TruckIcon, PackageIcon as BoxIcon, DollarSignIcon, UsersIcon } from './Icons';
 import { ParcelStatusBadge } from './ParcelStatusBadge';
+import { KpiCardSkeleton, ListSkeleton } from './skeletons';
 
 const RecentParcels: React.FC<{ parcels: Parcel[] }> = ({ parcels }) => (
     <div className="bg-gray-800 rounded-xl shadow-lg p-6">
@@ -42,6 +43,15 @@ const NewShops: React.FC<{ shops: Shop[] }> = ({ shops }) => (
 
 
 const Dashboard: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500); // Simulate network delay
+    return () => clearTimeout(timer);
+  }, []);
+
   const totalParcels = mockParcels.length;
   const inProgressParcels = mockParcels.filter(p => p.status === ParcelStatus.InTransit || p.status === ParcelStatus.Dispatched).length;
   const totalRevenue = mockShops.reduce((acc, shop) => acc + shop.totalRevenue, 0);
@@ -51,17 +61,33 @@ const Dashboard: React.FC = () => {
     <div className="space-y-8">
       <h1 className="text-4xl font-bold text-white tracking-tight">Dashboard Overview</h1>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <KpiCard title="Total Parcels" value={totalParcels.toString()} icon={BoxIcon} change="+5.2%" changeType="increase" />
-        <KpiCard title="In Progress" value={inProgressParcels.toString()} icon={TruckIcon} change="-1.0%" changeType="decrease" />
-        <KpiCard title="Total Revenue" value={`ETB ${totalRevenue.toLocaleString()}`} icon={DollarSignIcon} change="+12.8%" changeType="increase" />
-        <KpiCard title="Active Shops" value={activeShops.toString()} icon={UsersIcon} change="+2" changeType="increase" />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-         <RecentParcels parcels={mockParcels} />
-         <NewShops shops={mockShops} />
-      </div>
+      {isLoading ? (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <KpiCardSkeleton />
+            <KpiCardSkeleton />
+            <KpiCardSkeleton />
+            <KpiCardSkeleton />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <ListSkeleton />
+            <ListSkeleton />
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <KpiCard title="Total Parcels" value={totalParcels.toString()} icon={BoxIcon} change="+5.2%" changeType="increase" />
+            <KpiCard title="In Progress" value={inProgressParcels.toString()} icon={TruckIcon} change="-1.0%" changeType="decrease" />
+            <KpiCard title="Total Revenue" value={`ETB ${totalRevenue.toLocaleString()}`} icon={DollarSignIcon} change="+12.8%" changeType="increase" />
+            <KpiCard title="Active Shops" value={activeShops.toString()} icon={UsersIcon} change="+2" changeType="increase" />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+             <RecentParcels parcels={mockParcels} />
+             <NewShops shops={mockShops} />
+          </div>
+        </>
+      )}
     </div>
   );
 };

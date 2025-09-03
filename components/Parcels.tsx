@@ -1,16 +1,21 @@
-
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { mockParcels } from '../data/mockData';
-import { ParcelStatus } from '../types';
+import { ParcelStatus, type Parcel } from '../types';
 import { ParcelStatusBadge } from './ParcelStatusBadge';
-import { SearchIcon } from './Icons';
+import { SearchIcon, ArrowUpIcon, ArrowDownIcon } from './Icons';
+import { TableSkeleton } from './skeletons';
+
+type SortKey = 'trackingId' | 'sender.name' | 'recipient.name' | 'status' | 'updatedAt';
+type SortDirection = 'asc' | 'desc';
 
 const Parcels: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<ParcelStatus | 'all'>('all');
+    const [isLoading, setIsLoading] = useState(true);
+    const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: SortDirection }>({ key: 'updatedAt', direction: 'desc' });
 
     const filteredParcels = useMemo(() => {
-        return mockParcels
+        let sortableItems = mockParcels
             .filter(parcel => {
                 if (statusFilter !== 'all' && parcel.status !== statusFilter) {
                     return false;
@@ -21,10 +26,63 @@ const Parcels: React.FC = () => {
                     parcel.sender.name.toLowerCase().includes(lowerSearchTerm) ||
                     parcel.recipient.name.toLowerCase().includes(lowerSearchTerm)
                 );
-            })
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    }, [searchTerm, statusFilter]);
+            });
+        
+        const getNestedValue = (obj: Parcel, path: SortKey) => {
+            if (path === 'sender.name') return obj.sender.name;
+            if (path === 'recipient.name') return obj.recipient.name;
+            return obj[path as keyof Omit<Parcel, 'sender' | 'recipient'>];
+        };
+
+        sortableItems.sort((a, b) => {
+            const aValue = getNestedValue(a, sortConfig.key);
+            const bValue = getNestedValue(b, sortConfig.key);
+
+            if (aValue < bValue) {
+                return sortConfig.direction === 'asc' ? -1 : 1;
+            }
+            if (aValue > bValue) {
+                return sortConfig.direction === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+
+        return sortableItems;
+
+    }, [searchTerm, statusFilter, sortConfig]);
     
+    useEffect(() => {
+        setIsLoading(true);
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1000); // Simulate network delay for filter/search
+        return () => clearTimeout(timer);
+    }, [searchTerm, statusFilter]);
+
+    const handleSort = (key: SortKey) => {
+        let direction: SortDirection = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setIsLoading(true);
+        setSortConfig({ key, direction });
+        setTimeout(() => setIsLoading(false), 300); 
+    };
+    
+    const SortableHeader: React.FC<{ children: React.ReactNode; sortKey: SortKey; }> = ({ children, sortKey }) => {
+        const isActive = sortConfig.key === sortKey;
+        return (
+            <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                <button onClick={() => handleSort(sortKey)} className={`flex items-center gap-2 group transition-colors ${isActive ? 'text-white' : 'hover:text-white'}`}>
+                    {children}
+                    <span className={`transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-60'}`}>
+                        {sortConfig.direction === 'asc' ? <ArrowUpIcon className="h-3 w-3" /> : <ArrowDownIcon className="h-3 w-3" />}
+                    </span>
+                </button>
+            </th>
+        );
+    };
+
     return (
         <div className="space-y-6">
             <h1 className="text-4xl font-bold text-white tracking-tight">Parcel Management</h1>
@@ -52,38 +110,40 @@ const Parcels: React.FC = () => {
                 </select>
             </div>
 
-            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-700">
-                        <thead className="bg-gray-700/50">
-                            <tr>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Tracking ID</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Sender</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Recipient</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Status</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Last Update</th>
-                                <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-700">
-                            {filteredParcels.map((parcel) => (
-                                <tr key={parcel.id} className="hover:bg-gray-700/50 transition-colors">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-teal-400">{parcel.trackingId}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">{parcel.sender.name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">{parcel.recipient.name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                        <ParcelStatusBadge status={parcel.status} />
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{new Date(parcel.updatedAt).toLocaleString()}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button className="text-teal-400 hover:text-teal-300">Track</button>
-                                    </td>
+            {isLoading ? <TableSkeleton columns={6} /> : (
+                <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-700">
+                            <thead className="bg-gray-700/50">
+                                <tr>
+                                    <SortableHeader sortKey="trackingId">Tracking ID</SortableHeader>
+                                    <SortableHeader sortKey="sender.name">Sender</SortableHeader>
+                                    <SortableHeader sortKey="recipient.name">Recipient</SortableHeader>
+                                    <SortableHeader sortKey="status">Status</SortableHeader>
+                                    <SortableHeader sortKey="updatedAt">Last Update</SortableHeader>
+                                    <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-gray-700">
+                                {filteredParcels.map((parcel) => (
+                                    <tr key={parcel.id} className="hover:bg-gray-700/50 transition-colors">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-teal-400">{parcel.trackingId}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">{parcel.sender.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">{parcel.recipient.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                            <ParcelStatusBadge status={parcel.status} />
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{new Date(parcel.updatedAt).toLocaleString()}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <button className="text-teal-400 hover:text-teal-300">Track</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };

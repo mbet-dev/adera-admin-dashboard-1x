@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { mockShops } from '../data/mockData';
 import { ShopStatus } from '../types';
-import { SearchIcon } from './Icons';
+import { SearchIcon, ArrowUpIcon, ArrowDownIcon } from './Icons';
+import { TableSkeleton } from './skeletons';
 
 const getStatusClass = (status: ShopStatus) => {
     switch (status) {
@@ -20,20 +21,78 @@ interface ShopsProps {
   onViewShop: (shopId: string) => void;
 }
 
+type SortKey = 'name' | 'owner' | 'status' | 'totalOrders' | 'totalRevenue';
+type SortDirection = 'asc' | 'desc';
+
+
 const Shops: React.FC<ShopsProps> = ({ onViewShop }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<ShopStatus | 'all'>('all');
+    const [isLoading, setIsLoading] = useState(true);
+    const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: SortDirection }>({ key: 'name', direction: 'asc' });
 
     const filteredShops = useMemo(() => {
-        return mockShops.filter(shop => {
+        let sortableItems = mockShops.filter(shop => {
             if (statusFilter !== 'all' && shop.status !== statusFilter) {
                 return false;
             }
             const lowerSearchTerm = searchTerm.toLowerCase();
             return shop.name.toLowerCase().includes(lowerSearchTerm) ||
                    shop.owner.toLowerCase().includes(lowerSearchTerm);
-        }).sort((a, b) => new Date(b.joinedDate).getTime() - new Date(a.joinedDate).getTime());
+        });
+
+        sortableItems.sort((a, b) => {
+            const aValue = a[sortConfig.key];
+            const bValue = b[sortConfig.key];
+            
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return sortConfig.direction === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+            }
+
+            if (aValue < bValue) {
+                return sortConfig.direction === 'asc' ? -1 : 1;
+            }
+            if (aValue > bValue) {
+                return sortConfig.direction === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+        
+        return sortableItems;
+
+    }, [searchTerm, statusFilter, sortConfig]);
+
+    useEffect(() => {
+        setIsLoading(true);
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1000); // Simulate network delay for filter/search
+        return () => clearTimeout(timer);
     }, [searchTerm, statusFilter]);
+
+    const handleSort = (key: SortKey) => {
+        let direction: SortDirection = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setIsLoading(true);
+        setSortConfig({ key, direction });
+        setTimeout(() => setIsLoading(false), 300);
+    };
+
+    const SortableHeader: React.FC<{ children: React.ReactNode; sortKey: SortKey; }> = ({ children, sortKey }) => {
+        const isActive = sortConfig.key === sortKey;
+        return (
+            <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                <button onClick={() => handleSort(sortKey)} className={`flex items-center gap-2 group transition-colors ${isActive ? 'text-white' : 'hover:text-white'}`}>
+                    {children}
+                    <span className={`transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-60'}`}>
+                        {sortConfig.direction === 'asc' ? <ArrowUpIcon className="h-3 w-3" /> : <ArrowDownIcon className="h-3 w-3" />}
+                    </span>
+                </button>
+            </th>
+        );
+    };
 
     return (
         <div className="space-y-6">
@@ -62,40 +121,42 @@ const Shops: React.FC<ShopsProps> = ({ onViewShop }) => {
                 </select>
             </div>
 
-            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-700">
-                        <thead className="bg-gray-700/50">
-                            <tr>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Shop Name</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Owner</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Status</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Total Orders</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Total Revenue</th>
-                                <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-700">
-                            {filteredShops.map((shop) => (
-                                <tr key={shop.id} className="hover:bg-gray-700/50 transition-colors">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{shop.name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{shop.owner}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(shop.status)}`}>
-                                            {shop.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-300">{shop.totalOrders}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">ETB {shop.totalRevenue.toLocaleString()}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button onClick={() => onViewShop(shop.id)} className="text-teal-400 hover:text-teal-300">View</button>
-                                    </td>
+            {isLoading ? <TableSkeleton columns={6} /> : (
+                <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-700">
+                            <thead className="bg-gray-700/50">
+                                <tr>
+                                    <SortableHeader sortKey="name">Shop Name</SortableHeader>
+                                    <SortableHeader sortKey="owner">Owner</SortableHeader>
+                                    <SortableHeader sortKey="status">Status</SortableHeader>
+                                    <SortableHeader sortKey="totalOrders">Total Orders</SortableHeader>
+                                    <SortableHeader sortKey="totalRevenue">Total Revenue</SortableHeader>
+                                    <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-gray-700">
+                                {filteredShops.map((shop) => (
+                                    <tr key={shop.id} className="hover:bg-gray-700/50 transition-colors">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{shop.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{shop.owner}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(shop.status)}`}>
+                                                {shop.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-300">{shop.totalOrders}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">ETB {shop.totalRevenue.toLocaleString()}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <button onClick={() => onViewShop(shop.id)} className="text-teal-400 hover:text-teal-300">View</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };

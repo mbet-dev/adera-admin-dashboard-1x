@@ -2,6 +2,7 @@ import React from 'react';
 import { mockShops } from '../data/mockData';
 import { type Shop, ShopStatus } from '../types';
 import { ArrowLeftIcon, DollarSignIcon, UsersIcon, CheckCircleIcon, XCircleIcon, ClockIcon } from './Icons';
+import ShopPerformanceChart from './ShopPerformanceChart';
 
 interface ShopDetailsProps {
   shopId: string;
@@ -90,6 +91,10 @@ const ShopDetails: React.FC<ShopDetailsProps> = ({ shopId, onBack }) => {
             </div>
          </div>
       </div>
+
+      {shop.performanceHistory && shop.performanceHistory.length > 0 && (
+        <ShopPerformanceChart data={shop.performanceHistory} />
+      )}
 
       <div className="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
         <h3 className="text-xl font-semibold text-white mb-4">Status History</h3>

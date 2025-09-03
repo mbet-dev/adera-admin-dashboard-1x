@@ -395,7 +395,7 @@ const Financials: React.FC = () => {
             isFilterActive = true;
         }
 
-        return { filteredTransactions, title, isFilterActive };
+        return { filteredTransactions: transactions, title, isFilterActive };
     }, [selectedMonth, startDate, endDate]);
 
 

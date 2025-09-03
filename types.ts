@@ -1,10 +1,10 @@
-
 export type View =
   | { name: 'dashboard' }
   | { name: 'parcels' }
   | { name: 'shops' }
   | { name: 'shopDetails', shopId: string }
-  | { name: 'financials' };
+  | { name: 'financials' }
+  | { name: 'settings' };
 
 export enum ParcelStatus {
   Created = 'Created',
@@ -48,6 +48,11 @@ export interface Shop {
   statusHistory: {
     status: ShopStatus;
     date: string;
+  }[];
+  performanceHistory: {
+    month: string;
+    orders: number;
+    revenue: number;
   }[];
 }
 

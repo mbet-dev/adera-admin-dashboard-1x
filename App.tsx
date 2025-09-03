@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
@@ -6,6 +5,7 @@ import Parcels from './components/Parcels';
 import Shops from './components/Shops';
 import ShopDetails from './components/ShopDetails';
 import Financials from './components/Financials';
+import Settings from './components/Settings';
 import { type View } from './types';
 import { AderaLogo } from './components/Icons';
 
@@ -33,6 +33,8 @@ const App: React.FC = () => {
         return <ShopDetails shopId={view.shopId} onBack={handleBackToShops} />;
       case 'financials':
         return <Financials />;
+      case 'settings':
+        return <Settings />;
       default:
         return <Dashboard />;
     }

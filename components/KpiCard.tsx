@@ -25,7 +25,7 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, value, icon: Icon, change, cha
           <span className="text-sm text-gray-500 ml-2">vs last month</span>
         </div>
       </div>
-      <div className="bg-gray-700 p-3 rounded-lg">
+      <div className="bg-teal-500/10 p-3 rounded-lg">
         <Icon className="h-6 w-6 text-teal-400" />
       </div>
     </div>
